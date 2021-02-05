@@ -59,7 +59,9 @@ int add_multiple_to_trie(Trie* trie, char** words, int n);
  * trie: The trie to add the words to.
  * word: A string with the lowercase word to add (consisting only of [a-z]).
  * 
- * returns: 0 upon success, -1 upon failure.
+ * returns: 1 if the word was added to the trie, 0 if the word was already in 
+ * 			the trie, -1 upon failure due to the maximum size of the trie being 
+ * 			exceeded, -2 upon other failure.
  */
 int add_to_trie(Trie* trie, char* word);
 

@@ -37,8 +37,9 @@ SOFTWARE.
 #include <stdio.h>
 #include "trie.h"
 
-#define MAX_NODES 1000000 // Prevents memory overflowing.
+#define ASCII_OFFSET 97 // The offset from 0 our first character is in ASCII
 #define DICT_SIZE 26 // The number of characters in our dict
+#define MAX_NODES 1000000 // Prevents memory overflowing.
 
 /*
  * node 
@@ -74,7 +75,9 @@ int add_multiple_to_trie(struct node* head, char** words, int n) {
  * head: The head node of the trie to add the words to.
  * word: A string with the lowercase word to add (consisting only of [a-z]).
  * 
- * returns: 0 upon success, -1 upon failure.
+ * returns: 1 if the word was added to the trie, 0 if the word was already in 
+ * 			the trie, -1 upon failure due to the maximum size of the trie being 
+ * 			exceeded, -2 upon other failure.
  */
 int add_to_trie(struct node* head, char* word) {
 	return 0;
