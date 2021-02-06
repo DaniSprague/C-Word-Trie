@@ -78,14 +78,14 @@ int add_multiple_to_trie(struct node* head, char** words, int n) {
  * 
  * returns: 1 if the word was added to the trie, 0 if the word was already in 
  * 			the trie, -1 upon failure due to the maximum size of the trie being 
- * 			exceeded, -2 upon other failure.
+ * 			exceeded, -2 upon bad words input, or -3 upon other failure.
  */
 int add_to_trie(struct node* head, char* word) {
 	head -> count += 1;
 	while (*word != '\0') {
 		struct node* new_node = (struct node*) calloc(sizeof(struct node*), 1);
 		if (new_node == NULL) { // Catch error in calloc
-			return -2;
+			return -3;
 		}
 		head -> next[*word - ASCII_OFFSET] = new_node;
 		new_node -> count += 1;
