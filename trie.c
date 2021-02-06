@@ -140,7 +140,16 @@ int add_to_trie(struct node* head, char* word) {
  * 			or -2 upon a different error.
  */
 int check_trie(struct node* head, char* word) {
-	return 0;
+	bool in_trie = 1;
+	while (*word != '\0' && in_trie) {
+		if (head -> next[*word - ASCII_OFFSET] != NULL) {
+			head = head -> next[*word - ASCII_OFFSET];
+		} else {
+			in_trie = 0;
+		}
+		word++;
+	}
+	return in_trie && head -> ends_word; // The final node must end the word too
 }
 
 /*

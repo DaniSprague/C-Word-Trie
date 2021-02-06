@@ -76,6 +76,49 @@ int test_add_check_validity2() {
 }
 
 /*
+ * test_check_single_word
+ * 
+ * Verifies that check works with a single existing word.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_check_single_word() {
+	Trie* trie = create_trie();
+	add_to_trie(trie, "apples");
+	return assert_true(check_trie(trie, "apples"), "\"apples\" in trie");
+}
+
+/*
+ * test_check_single_word
+ * 
+ * Verifies that check works with a single nonexistent word.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_check_nonexistent_word() {
+	Trie* trie = create_trie();
+	add_to_trie(trie, "bananas");
+	return assert_true(check_trie(trie, "apples") == 0, 
+						"\"apples\" not in trie");
+}
+
+/*
+ * test_check_empty_trie
+ * 
+ * Verifies that check works with an empty trie.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_check_empty_trie() {
+	Trie* trie = create_trie();
+	int count = 0;
+	count += check_trie(trie, "oobleck");
+	count += check_trie(trie, "bananas");
+	count += check_trie(trie, "apples");
+	return assert_true(count == 0, "No words in empty trie");
+}
+
+/*
  * test_create
  * 
  * Verifies that create_trie() returns a pointer with address > 0.
@@ -154,6 +197,9 @@ int main() {
 	count += run_test(&test_add_error_check, &total_tests);
 	count += run_test(&test_add_check_validity1, &total_tests);
 	count += run_test(&test_add_check_validity2, &total_tests);
+	count += run_test(&test_check_single_word, &total_tests);
+	count += run_test(&test_check_nonexistent_word, &total_tests);
+	count += run_test(&test_check_empty_trie, &total_tests);
 
 	printf("%d / %d tests passed.\n", total_tests - count, total_tests);
 	return count >= 1 ? 1 : 0;
