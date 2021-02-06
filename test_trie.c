@@ -36,6 +36,114 @@ SOFTWARE.
 #include "test.h"
 #include "trie.h"
 
+/*
+ * test_add_error_check
+ * 
+ * Verifies that add_to_trie() does not throw an error when adding one word.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_add_error_check() {
+	Trie* trie = create_trie();
+	return assert_true(add_to_trie(trie, "abcdefghijklmnopqrstuvwxyz") == 1, 
+						"Trie adding did not throw an error for one entry");
+}
+
+/*
+ * test_add_check_validity1
+ * 
+ * Verifies that add_to_trie() rejects non-lowercase words.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_add_check_validity1() {
+	Trie* trie = create_trie();
+	return assert_true(add_to_trie(trie, "ABCDEFGHIJKLMNOPQRSTUVWXYZ") == -2,
+						"Trie does not accept capitalized input");
+}
+
+/*
+ * test_add_check_validity2
+ * 
+ * Verifies that add_to_trie() rejects non-letters only words.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_add_check_validity2() {
+	Trie* trie = create_trie();
+	return assert_true(add_to_trie(trie, ".,!<>/\\`~\"\'") == -2,
+						"Trie does not accept punctuation");
+}
+
+/*
+ * test_check_empty_trie
+ * 
+ * Verifies that check works with an empty trie.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_check_empty_trie() {
+	Trie* trie = create_trie();
+	int count = 0;
+	count += check_trie(trie, "oobleck");
+	count += check_trie(trie, "bananas");
+	count += check_trie(trie, "apples");
+	return assert_true(count == 0, "No words in empty trie");
+}
+
+/*
+ * test_check_invalid_word
+ * 
+ * Verifies that check works with an invalid word.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_check_invalid_word() {
+	Trie* trie = create_trie();
+	add_to_trie(trie, "bananas");
+	return assert_true(check_trie(trie, "BaNaNaS") == 0,
+						"An invalid word is not in the trie");
+}
+
+/*
+ * test_check_nonexistent_word
+ * 
+ * Verifies that check works with a single nonexistent word.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_check_nonexistent_word() {
+	Trie* trie = create_trie();
+	add_to_trie(trie, "bananas");
+	return assert_true(check_trie(trie, "apples") == 0, 
+						"\"apples\" not in trie");
+}
+
+/*
+ * test_check_single_word
+ * 
+ * Verifies that check works with a single existing word.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_check_single_word() {
+	Trie* trie = create_trie();
+	add_to_trie(trie, "apples");
+	return assert_true(check_trie(trie, "apples"), "\"apples\" in trie");
+}
+
+/*
+ * test_create
+ * 
+ * Verifies that create_trie() returns a pointer with address > 0.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_create() {
+	bool cond = create_trie() > 0;
+	return assert_true(cond, "Trie pointer > 0");
+}
+
 /* ============================= TEST FRAMEWORK ============================= */
 
 /*
@@ -97,7 +205,15 @@ int run_test(int (*test)(), int* total_tests) {
 int main() {
 	int count = 0;
 	int total_tests = 0;
-	// Example of running a test: "count += run_test(&test_func, &total_tests);"
+	int (*tests[])() = {&test_create, &test_add_error_check, 
+						&test_add_check_validity1, &test_add_check_validity2, 
+						&test_check_single_word, &test_check_nonexistent_word, 
+						&test_check_empty_trie, &test_check_invalid_word, NULL};
+
+	for (int i = 0; tests[i] != NULL; i++) {
+		count += run_test(tests[i], &total_tests);
+	}
+
 	printf("%d / %d tests passed.\n", total_tests - count, total_tests);
 	return count >= 1 ? 1 : 0;
 }

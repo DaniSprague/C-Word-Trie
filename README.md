@@ -1,4 +1,4 @@
-# C-Word-Trie
+# C Word Trie (WIP) 
 
 An implementation of the [trie](https://en.wikipedia.org/wiki/Trie) data structure for C. This trie supports lowercase
 words with only the characters from a-z, inclusive. (Though the code has been designed to be expanded to support any
@@ -19,3 +19,7 @@ contiguous sequence of ASCII characters given enough memory through use of macro
 
 Though the trie was designed to support lowercase words from a-z only, it can be expanded to support any contiguous
 sequence of ASCII characters given enough memory through modification of macros in `trie.c`.
+
+## Motivation
+
+The two main driving factors for this project were to learn more about C and to practice some Test-Driven Development.

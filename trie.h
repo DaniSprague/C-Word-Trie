@@ -61,7 +61,7 @@ int add_multiple_to_trie(Trie* trie, char** words, int n);
  * 
  * returns: 1 if the word was added to the trie, 0 if the word was already in 
  * 			the trie, -1 upon failure due to the maximum size of the trie being 
- * 			exceeded, -2 upon other failure.
+ * 			exceeded, -2 upon bad words input, or -3 upon other failure.
  */
 int add_to_trie(Trie* trie, char* word);
 
@@ -74,7 +74,7 @@ int add_to_trie(Trie* trie, char* word);
  * word: A string with the lowercase word (consisting only of [a-z]) to check
  * 			existence of in the trie.
  * 
- * returns: 1 upon membership, 0 upon no membership, -1 upon error.
+ * returns: 1 upon membership, 0 upon no membership, or -1 upon an error.
  */
 int check_trie(Trie* trie, char* word);
 
