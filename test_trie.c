@@ -37,6 +37,19 @@ SOFTWARE.
 #include "trie.h"
 
 /*
+ * test_add_error_check
+ * 
+ * Verifies that add_to_trie() does not throw an error when adding one word.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_add_error_check() {
+	Trie* trie = create_trie();
+	return assert_true(add_to_trie(trie, "abcdefghijklmnopqrstuvwxyz") == 1, 
+						"Trie adding did not throw an error for one entry");
+}
+
+/*
  * test_create
  * 
  * Verifies that create_trie() returns a pointer with address > 0.
@@ -112,7 +125,8 @@ int main() {
 
 	// Example of running a test: "count += run_test(&test_func, &total_tests);"
 	count += run_test(&test_create, &total_tests);
-	
+	count += run_test(&test_add_error_check, &total_tests);
+
 	printf("%d / %d tests passed.\n", total_tests - count, total_tests);
 	return count >= 1 ? 1 : 0;
 }

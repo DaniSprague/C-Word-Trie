@@ -81,7 +81,19 @@ int add_multiple_to_trie(struct node* head, char** words, int n) {
  * 			exceeded, -2 upon other failure.
  */
 int add_to_trie(struct node* head, char* word) {
-	return 0;
+	head -> count += 1;
+	while (*word != '\0') {
+		struct node* new_node = (struct node*) calloc(sizeof(struct node*), 1);
+		if (new_node == NULL) { // Catch error in calloc
+			return -2;
+		}
+		head -> next[*word - ASCII_OFFSET] = new_node;
+		new_node -> count += 1;
+		head = new_node;
+		word++;
+	}
+	head -> ends_word = true;
+	return 1;
 }
 
 /*
