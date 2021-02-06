@@ -128,7 +128,8 @@ int add_to_trie(struct node* head, char* word) {
  * word: A string with the lowercase word (consisting only of [a-z]) to check
  * 			existence of in the trie.
  * 
- * returns: 1 upon membership, 0 upon no membership, -1 upon error.
+ * returns: 1 upon membership, 0 upon no membership, -1 upon a bad word passed,
+ * 			or -2 upon a different error.
  */
 int check_trie(struct node* head, char* word) {
 	return 0;
