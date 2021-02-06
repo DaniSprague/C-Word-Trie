@@ -1,11 +1,11 @@
 /*
-test_trie.c
+test.h
 
 Dani Sprague
 February 2021
 https://github.com/DaniSprague/C-Word-Trie
 
-Unit tests for the trie.c Trie implementation.
+A header file for the test_trie.c unit test framework functionality.
 
 
 MIT License
@@ -31,13 +31,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <stdbool.h>
-#include <stdio.h>
-#include "test.h"
-#include "trie.h"
-
-/* ============================= TEST FRAMEWORK ============================= */
-
 /*
  * assert_false
  * 
@@ -48,12 +41,7 @@ SOFTWARE.
  * 
  * returns: 0 upon success, 1 upon failure.
  */
-int assert_false(bool condition, char* name) {
-	if (condition) {
-		printf("TEST FAILURE: %s evaluated as true.\n", name);
-	}
-	return condition ? 1 : 0;
-}
+int assert_false(bool condition, char* name);
 
 /*
  * assert_true
@@ -65,12 +53,7 @@ int assert_false(bool condition, char* name) {
  * 
  * returns: 0 upon success, 1 upon failure.
  */ 
-int assert_true(bool condition, char* name) {
-	if (!condition) {
-		printf("TEST FAILURE: %s evaluated as false.\n", name);
-	}
-	return condition ? 0 : 1;
-}
+int assert_true(bool condition, char* name);
 
 /*
  * run_test
@@ -82,22 +65,4 @@ int assert_true(bool condition, char* name) {
  * 
  * returns: 0 upon success, 1 upon failure.
  */
-int run_test(int (*test)(), int* total_tests) {
-	*total_tests += 1;
-	return test();
-}
-
-/*
- * main
- * 
- * Runs all tests, printing out the pass rate.
- * 
- * returns: 0 upon all tests passed, 1 otherwise.
- */
-int main() {
-	int count = 0;
-	int total_tests = 0;
-	// Example of running a test: "count += run_test(&test_func, &total_tests);"
-	printf("%d / %d tests passed.\n", total_tests - count, total_tests);
-	return count >= 1 ? 1 : 0;
-}
+int run_test(int (*test)(), int* total_tests);
