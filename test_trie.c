@@ -205,16 +205,14 @@ int run_test(int (*test)(), int* total_tests) {
 int main() {
 	int count = 0;
 	int total_tests = 0;
+	int (*tests[])() = {&test_create, &test_add_error_check, 
+						&test_add_check_validity1, &test_add_check_validity2, 
+						&test_check_single_word, &test_check_nonexistent_word, 
+						&test_check_empty_trie, &test_check_invalid_word, NULL};
 
-	// Example of running a test: "count += run_test(&test_func, &total_tests);"
-	count += run_test(&test_create, &total_tests);
-	count += run_test(&test_add_error_check, &total_tests);
-	count += run_test(&test_add_check_validity1, &total_tests);
-	count += run_test(&test_add_check_validity2, &total_tests);
-	count += run_test(&test_check_single_word, &total_tests);
-	count += run_test(&test_check_nonexistent_word, &total_tests);
-	count += run_test(&test_check_empty_trie, &total_tests);
-	count += run_test(&test_check_invalid_word, &total_tests);
+	for (int i = 0; tests[i] != NULL; i++) {
+		count += run_test(tests[i], &total_tests);
+	}
 
 	printf("%d / %d tests passed.\n", total_tests - count, total_tests);
 	return count >= 1 ? 1 : 0;
