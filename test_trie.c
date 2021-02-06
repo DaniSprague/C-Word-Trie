@@ -36,6 +36,18 @@ SOFTWARE.
 #include "test.h"
 #include "trie.h"
 
+/*
+ * test_create
+ * 
+ * Verifies that create_trie() returns a pointer with address > 0.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_create() {
+	bool cond = create_trie() > 0;
+	return assert_true(cond, "Trie pointer > 0");
+}
+
 /* ============================= TEST FRAMEWORK ============================= */
 
 /*
@@ -97,7 +109,10 @@ int run_test(int (*test)(), int* total_tests) {
 int main() {
 	int count = 0;
 	int total_tests = 0;
+
 	// Example of running a test: "count += run_test(&test_func, &total_tests);"
+	count += run_test(&test_create, &total_tests);
+	
 	printf("%d / %d tests passed.\n", total_tests - count, total_tests);
 	return count >= 1 ? 1 : 0;
 }

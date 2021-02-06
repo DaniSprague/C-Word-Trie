@@ -35,6 +35,7 @@ SOFTWARE.
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "trie.h"
 
 #define ASCII_OFFSET 97 // The offset from 0 our first character is in ASCII
@@ -119,7 +120,7 @@ int clear_trie(struct node* head) {
  * returns: A pointer to the head of an empty trie, or NULL upon error.
  */
 struct node* create_trie() {
-	return NULL;
+	return (struct node*)calloc(sizeof(struct node), 1);
 }
 
 /*
