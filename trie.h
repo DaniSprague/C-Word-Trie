@@ -74,8 +74,7 @@ int add_to_trie(Trie* trie, char* word);
  * word: A string with the lowercase word (consisting only of [a-z]) to check
  * 			existence of in the trie.
  * 
- * returns: 1 upon membership, 0 upon no membership, -1 upon a bad word passed,
- * 			or -2 upon a different error.
+ * returns: 1 upon membership, 0 upon no membership, or -1 upon an error.
  */
 int check_trie(Trie* trie, char* word);
 
