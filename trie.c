@@ -54,6 +54,26 @@ struct node {
 };
 
 /*
+ * is_word_valid
+ * 
+ * Verifies that a word is in a useable format (in this case, lowercase a-z).
+ * 
+ * word: A null-terminated string to check.
+ * 
+ * return: true upon success, false upon failure.
+ */
+bool is_word_valid(char* word) {
+	bool valid = true;
+	while(*word != '\0' && valid) {
+		if (*word - ASCII_OFFSET < 0 || *word - ASCII_OFFSET >= DICT_SIZE) {
+			valid = false;
+		}
+		word++;
+	}
+	return valid;
+}
+
+/*
  * add_multiple_to_trie
  * 
  * Adds multiple words to the trie.
@@ -81,6 +101,9 @@ int add_multiple_to_trie(struct node* head, char** words, int n) {
  * 			exceeded, -2 upon bad words input, or -3 upon other failure.
  */
 int add_to_trie(struct node* head, char* word) {
+	if (!is_word_valid(word)) {
+		return -2;
+	}
 	head -> count += 1;
 	while (*word != '\0') {
 		struct node* new_node = (struct node*) calloc(sizeof(struct node*), 1);
