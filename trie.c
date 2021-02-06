@@ -140,6 +140,9 @@ int add_to_trie(struct node* head, char* word) {
  */
 int check_trie(struct node* head, char* word) {
 	bool in_trie = 1;
+	if (!is_word_valid(word)) {
+		in_trie = 0;
+	}
 	while (*word != '\0' && in_trie) {
 		if (head -> next[*word - ASCII_OFFSET] != NULL) {
 			head = head -> next[*word - ASCII_OFFSET];

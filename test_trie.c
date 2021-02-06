@@ -92,7 +92,21 @@ int test_check_empty_trie() {
 }
 
 /*
- * test_check_single_word
+ * test_check_invalid_word
+ * 
+ * Verifies that check works with an invalid word.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_check_invalid_word() {
+	Trie* trie = create_trie();
+	add_to_trie(trie, "bananas");
+	return assert_true(check_trie(trie, "BaNaNaS") == 0,
+						"An invalid word is not in the trie");
+}
+
+/*
+ * test_check_nonexistent_word
  * 
  * Verifies that check works with a single nonexistent word.
  * 
@@ -200,6 +214,7 @@ int main() {
 	count += run_test(&test_check_single_word, &total_tests);
 	count += run_test(&test_check_nonexistent_word, &total_tests);
 	count += run_test(&test_check_empty_trie, &total_tests);
+	count += run_test(&test_check_invalid_word, &total_tests);
 
 	printf("%d / %d tests passed.\n", total_tests - count, total_tests);
 	return count >= 1 ? 1 : 0;
