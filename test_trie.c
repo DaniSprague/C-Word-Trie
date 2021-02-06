@@ -31,6 +31,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <stdbool.h>
 #include <stdio.h>
 #include "trie.h"
 
@@ -39,10 +40,16 @@ SOFTWARE.
  * 
  * Asserts a condition is false.
  * 
- * returns: 0 upon succes, 1 upon failure.
+ * condition: A boolean to assert if false.
+ * name: The name of the condition to print out.
+ * 
+ * returns: 0 upon success, 1 upon failure.
  */
-int assert_false() {
-	return 0;
+int assert_false(bool condition, char* name) {
+	if (condition) {
+		printf("TEST FAILURE: %s evaluated as true.\n", name);
+	}
+	return condition ? 1 : 0;
 }
 
 /*
@@ -50,14 +57,44 @@ int assert_false() {
  * 
  * Asserts a condition is true.
  * 
+ * condition: A boolean to assert if false.
+ * name: The name of the condition to print out.
+ * 
  * returns: 0 upon success, 1 upon failure.
  */ 
-int assert_true() {
-	return 0;
+int assert_true(bool condition, char* name) {
+	if (!condition) {
+		printf("TEST FAILURE: %s evaluated as false.\n", name);
+	}
+	return condition ? 0 : 1;
 }
 
+/*
+ * run_test
+ * 
+ * Runs a test, incrementing the total test counter.
+ * 
+ * test: A pointer to the test function taking no arguments, returning 1 or 0.
+ * total_tests: A pointer to the int representing the total number of tests ran.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int run_test(int (*test)(), int* total_tests) {
+	*total_tests += 1;
+	return test();
+}
+
+/*
+ * main
+ * 
+ * Runs all tests, printing out the pass rate.
+ * 
+ * returns: 0 upon all tests passed, 1 otherwise.
+ */
 int main() {
 	int count = 0;
-	create_trie();
+	int total_tests = 0;
+	// Example of running a test: "count += run_test(&test_func, &total_tests);"
+	printf("%d / %d tests passed.\n", total_tests - count, total_tests);
 	return count >= 1 ? 1 : 0;
 }
