@@ -101,21 +101,29 @@ int add_multiple_to_trie(struct node* head, char** words, int n) {
  * 			exceeded, -2 upon bad words input, or -3 upon other failure.
  */
 int add_to_trie(struct node* head, char* word) {
+	struct node* new_node;
 	if (!is_word_valid(word)) {
 		return -2;
 	}
+
 	head -> count += 1;
 	while (*word != '\0') {
-		struct node* new_node = (struct node*) calloc(sizeof(struct node*), 1);
-		if (new_node == NULL) { // Catch error in calloc
-			return -3;
+		if (head -> next[*word - ASCII_OFFSET] == 0) { // If next node DNE
+			new_node = (struct node*) calloc(sizeof(struct node), 1);
+			if (new_node == NULL) { // Catch error in calloc
+				return -3;
+			}
+			head -> next[*word - ASCII_OFFSET] = new_node;
+			head = new_node;
+		} else {
+			head = head -> next[*word - ASCII_OFFSET];
 		}
-		head -> next[*word - ASCII_OFFSET] = new_node;
-		new_node -> count += 1;
-		head = new_node;
+		
+		head -> count += 1;
 		word++;
 	}
 	head -> ends_word = true;
+
 	return 1;
 }
 
