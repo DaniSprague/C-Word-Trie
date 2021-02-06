@@ -76,16 +76,19 @@ int test_add_check_validity2() {
 }
 
 /*
- * test_check_single_word
+ * test_check_empty_trie
  * 
- * Verifies that check works with a single existing word.
+ * Verifies that check works with an empty trie.
  * 
  * returns: 0 upon success, 1 upon failure.
  */
-int test_check_single_word() {
+int test_check_empty_trie() {
 	Trie* trie = create_trie();
-	add_to_trie(trie, "apples");
-	return assert_true(check_trie(trie, "apples"), "\"apples\" in trie");
+	int count = 0;
+	count += check_trie(trie, "oobleck");
+	count += check_trie(trie, "bananas");
+	count += check_trie(trie, "apples");
+	return assert_true(count == 0, "No words in empty trie");
 }
 
 /*
@@ -103,19 +106,16 @@ int test_check_nonexistent_word() {
 }
 
 /*
- * test_check_empty_trie
+ * test_check_single_word
  * 
- * Verifies that check works with an empty trie.
+ * Verifies that check works with a single existing word.
  * 
  * returns: 0 upon success, 1 upon failure.
  */
-int test_check_empty_trie() {
+int test_check_single_word() {
 	Trie* trie = create_trie();
-	int count = 0;
-	count += check_trie(trie, "oobleck");
-	count += check_trie(trie, "bananas");
-	count += check_trie(trie, "apples");
-	return assert_true(count == 0, "No words in empty trie");
+	add_to_trie(trie, "apples");
+	return assert_true(check_trie(trie, "apples"), "\"apples\" in trie");
 }
 
 /*
