@@ -1,4 +1,4 @@
-# C Word Trie (WIP) 
+# C Word Trie (WIP)
 
 An implementation of the [trie](https://en.wikipedia.org/wiki/Trie) data structure for C. This trie supports lowercase
 words with only the characters from a-z, inclusive. (Though the code has been designed to be expanded to support any
