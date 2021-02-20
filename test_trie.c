@@ -33,6 +33,7 @@ SOFTWARE.
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "test.h"
 #include "trie.h"
 
@@ -44,9 +45,12 @@ SOFTWARE.
  * returns: 0 upon success, 1 upon failure.
  */
 int test_add_error_check() {
+	int test;
 	Trie* trie = create_trie();
-	return assert_true(add_to_trie(trie, "abcdefghijklmnopqrstuvwxyz") == 1, 
+	test = assert_true(add_to_trie(trie, "abcdefghijklmnopqrstuvwxyz") == 1, 
 						"Trie adding did not throw an error for one entry");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -57,9 +61,12 @@ int test_add_error_check() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_add_check_validity1() {
+	int test;
 	Trie* trie = create_trie();
-	return assert_true(add_to_trie(trie, "ABCDEFGHIJKLMNOPQRSTUVWXYZ") == -2,
+	test = assert_true(add_to_trie(trie, "ABCDEFGHIJKLMNOPQRSTUVWXYZ") == -2,
 						"Trie does not accept capitalized input");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -70,9 +77,12 @@ int test_add_check_validity1() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_add_check_validity2() {
+	int test;
 	Trie* trie = create_trie();
-	return assert_true(add_to_trie(trie, ".,!<>/\\`~\"\'") == -2,
+	test = assert_true(add_to_trie(trie, ".,!<>/\\`~\"\'") == -2,
 						"Trie does not accept punctuation");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -83,12 +93,15 @@ int test_add_check_validity2() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_check_empty_trie() {
+	int test;
 	Trie* trie = create_trie();
 	int count = 0;
 	count += check_trie(trie, "oobleck");
 	count += check_trie(trie, "bananas");
 	count += check_trie(trie, "apples");
-	return assert_true(count == 0, "No words in empty trie");
+	test = assert_true(count == 0, "No words in empty trie");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -99,10 +112,13 @@ int test_check_empty_trie() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_check_invalid_word() {
+	int test;
 	Trie* trie = create_trie();
 	add_to_trie(trie, "bananas");
-	return assert_true(check_trie(trie, "BaNaNaS") == 0,
+	test = assert_true(check_trie(trie, "BaNaNaS") == 0,
 						"An invalid word is not in the trie");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -113,10 +129,13 @@ int test_check_invalid_word() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_check_nonexistent_word() {
+	int test;
 	Trie* trie = create_trie();
 	add_to_trie(trie, "bananas");
-	return assert_true(check_trie(trie, "apples") == 0, 
+	test = assert_true(check_trie(trie, "apples") == 0, 
 						"\"apples\" not in trie");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -127,9 +146,12 @@ int test_check_nonexistent_word() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_check_single_word() {
+	int test;
 	Trie* trie = create_trie();
 	add_to_trie(trie, "apples");
-	return assert_true(check_trie(trie, "apples"), "\"apples\" in trie");
+	test = assert_true(check_trie(trie, "apples"), "\"apples\" in trie");
+	free_mem(trie);
+	return test;
 }
 
 /**
@@ -140,8 +162,11 @@ int test_check_single_word() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_clear_empty_trie() {
+	int test;
 	Trie* trie = create_trie();
-	return assert_true(clear_trie(trie) == 0, "Empty trie cleared");
+	test = assert_true(clear_trie(trie) == 0, "Empty trie cleared");
+	free_mem(trie);
+	return test;
 }
 
 
@@ -153,6 +178,7 @@ int test_clear_empty_trie() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_clear_multiple() {
+	int test;
 	Trie* trie = create_trie();
 	int count = 0;
 	add_to_trie(trie, "apples");
@@ -164,7 +190,9 @@ int test_clear_multiple() {
 	count += check_trie(trie, "bananas");
 	count += check_trie(trie, "banana");
 	count += check_trie(trie, "oobleck");
-	return assert_true(count == 0, "Multi-word trie cleared");
+	test = assert_true(count == 0, "Multi-word trie cleared");
+	free_mem(trie);
+	return test;
 }
 
 /**
@@ -175,11 +203,14 @@ int test_clear_multiple() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_clear_single() {
+	int test;
 	Trie* trie = create_trie();
 	add_to_trie(trie, "apples");
 	clear_trie(trie);
-	return assert_true(check_trie(trie, "apples") == 0, 
+	test = assert_true(check_trie(trie, "apples") == 0, 
 						"Single-word trie cleared");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -190,7 +221,9 @@ int test_clear_single() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_create() {
-	bool cond = create_trie() > 0;
+	struct node* trie = create_trie();
+	bool cond = trie > 0;
+	free_mem(trie);
 	return assert_true(cond, "Trie pointer > 0");
 }
 
@@ -228,6 +261,16 @@ int assert_true(bool condition, char* name) {
 		printf("TEST FAILURE: %s evaluated as false.\n", name);
 	}
 	return condition ? 0 : 1;
+}
+
+/*
+ * free_mem
+ * 
+ * Frees the memory associated with a trie used in testing.
+ */
+void free_mem(Trie* head) {
+	clear_trie(head);
+	free(head);
 }
 
 /*
