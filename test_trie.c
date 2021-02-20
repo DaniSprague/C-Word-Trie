@@ -132,6 +132,56 @@ int test_check_single_word() {
 	return assert_true(check_trie(trie, "apples"), "\"apples\" in trie");
 }
 
+/**
+ * test_clear_empty_trie
+ * 
+ * Verifies that clearing an empty trie doesn't return an error.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_clear_empty_trie() {
+	Trie* trie = create_trie();
+	return assert_true(clear_trie(trie) == 0, "Empty trie cleared");
+}
+
+
+/**
+ * test_clear_multiple
+ * 
+ * Verifies that clearing a trie with one word works.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_clear_multiple() {
+	Trie* trie = create_trie();
+	int count = 0;
+	add_to_trie(trie, "apples");
+	add_to_trie(trie, "bananas");
+	add_to_trie(trie, "banana");
+	add_to_trie(trie, "oobleck");
+	clear_trie(trie);
+	count += check_trie(trie, "apples");
+	count += check_trie(trie, "bananas");
+	count += check_trie(trie, "banana");
+	count += check_trie(trie, "oobleck");
+	return assert_true(count == 0, "Multi-word trie cleared");
+}
+
+/**
+ * test_clear_single
+ * 
+ * Verifies that clearing a trie with one word works.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_clear_single() {
+	Trie* trie = create_trie();
+	add_to_trie(trie, "apples");
+	clear_trie(trie);
+	return assert_true(check_trie(trie, "apples") == 0, 
+						"Single-word trie cleared");
+}
+
 /*
  * test_create
  * 
@@ -208,7 +258,9 @@ int main() {
 	int (*tests[])() = {&test_create, &test_add_error_check, 
 						&test_add_check_validity1, &test_add_check_validity2, 
 						&test_check_single_word, &test_check_nonexistent_word, 
-						&test_check_empty_trie, &test_check_invalid_word, NULL};
+						&test_check_empty_trie, &test_check_invalid_word,
+						&test_clear_empty_trie, &test_clear_single,
+						&test_clear_multiple, NULL};
 
 	for (int i = 0; tests[i] != NULL; i++) {
 		count += run_test(tests[i], &total_tests);

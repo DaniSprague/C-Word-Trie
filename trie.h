@@ -81,7 +81,7 @@ int check_trie(Trie* trie, char* word);
 /*
  * clear_trie
  * 
- * Deletes all entries in the trie.
+ * Deletes all entries in the trie. Does not delete the head node.
  * 
  * trie: The trie to clear.
  * 

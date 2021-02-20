@@ -109,7 +109,7 @@ int add_to_trie(struct node* head, char* word) {
 	head -> count += 1;
 	while (*word != '\0') {
 		if (head -> next[*word - ASCII_OFFSET] == 0) { // If next node DNE
-			new_node = (struct node*) calloc(sizeof(struct node), 1);
+			new_node = (struct node*) calloc(1, sizeof(struct node));
 			if (new_node == NULL) { // Catch error in calloc
 				return -3;
 			}
@@ -154,16 +154,45 @@ int check_trie(struct node* head, char* word) {
 	return in_trie && head -> ends_word; // The final node must end the word too
 }
 
+/**
+ * clear_individual
+ * 
+ * A helper function for clear_trie. Recursively calls itself to clear all
+ * nodes, then frees itself.
+ * 
+ * node: The node to clear all children then free itself.
+ * 
+ * returns: none
+ */
+void clear_individual(struct node* curr_node) {
+	struct node* curr_child;
+	for (int i = 0; i < DICT_SIZE; i++) {
+		curr_child = curr_node -> next[i];
+		if (curr_child != NULL) {
+			clear_individual(curr_child);
+		}
+	}
+	free(curr_node);
+}
+
 /*
  * clear_trie
  * 
- * Deletes all entries in the trie.
+ * Deletes all entries in the trie. Does not delete the head node.
  * 
  * head: The head of the trie to clear.
  * 
  * returns: 0 upon success, -1 upon error.
  */
 int clear_trie(struct node* head) {
+	for (int i = 0; i < DICT_SIZE; i++) {
+		if (head -> next[i] != NULL) {
+			clear_individual(head -> next[i]);
+		}
+		head -> next[i] = NULL;
+	}
+	head -> count = 0;
+	head -> ends_word = false;
 	return 0;
 }
 
@@ -175,7 +204,7 @@ int clear_trie(struct node* head) {
  * returns: A pointer to the head of an empty trie, or NULL upon error.
  */
 struct node* create_trie() {
-	return (struct node*)calloc(sizeof(struct node), 1);
+	return (struct node*)calloc(1, sizeof(struct node));
 }
 
 /*
