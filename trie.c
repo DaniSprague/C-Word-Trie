@@ -8,6 +8,8 @@ https://github.com/DaniSprague/C-Word-Trie
 A trie implementation that stores lowercase words. Supports adding, deleting,
 creating, clearing, and checking membership in a tree.
 
+WARNING: This trie does not have a maximum nodes limit, which could be used
+maliciously to fill up memory.
 
 MIT License
 
@@ -40,7 +42,6 @@ SOFTWARE.
 
 #define ASCII_OFFSET 97 // The offset from 0 our first character is in ASCII
 #define DICT_SIZE 26 // The number of characters in our dict
-#define MAX_NODES 1000000 // Prevents memory overflowing.
 
 /*
  * node 
@@ -74,21 +75,6 @@ bool is_word_valid(char* word) {
 }
 
 /*
- * add_multiple_to_trie
- * 
- * Adds multiple words to the trie.
- * 
- * head: The head of the trie to add the words to.
- * words: An array of lowercase words consisting only of [a-z] to add.
- * n: The number of words to add.
- * 
- * returns: The number of words added, or -1 upon error.
- */
-int add_multiple_to_trie(struct node* head, char** words, int n) {
-	return 0;
-}
-
-/*
  * add_to_trie
  * 
  * Adds a word to the trie.
@@ -102,29 +88,31 @@ int add_multiple_to_trie(struct node* head, char** words, int n) {
  */
 int add_to_trie(struct node* head, char* word) {
 	struct node* new_node;
+	int ret = 1;
 	if (!is_word_valid(word)) {
-		return -2;
-	}
-
-	head -> count += 1;
-	while (*word != '\0') {
-		if (head -> next[*word - ASCII_OFFSET] == 0) { // If next node DNE
-			new_node = (struct node*) calloc(sizeof(struct node), 1);
-			if (new_node == NULL) { // Catch error in calloc
-				return -3;
-			}
-			head -> next[*word - ASCII_OFFSET] = new_node;
-			head = new_node;
-		} else {
-			head = head -> next[*word - ASCII_OFFSET];
-		}
-		
+		ret = -2;
+	} else if (check_trie(head, word) == 1) {
+		ret = 0;
+	} else {
 		head -> count += 1;
-		word++;
+		while (*word != '\0') {
+			if (head -> next[*word - ASCII_OFFSET] == 0) { // If next node DNE
+				new_node = (struct node*) calloc(1, sizeof(struct node));
+				if (new_node == NULL) { // Catch error in calloc
+					return -3;
+				}
+				head -> next[*word - ASCII_OFFSET] = new_node;
+				head = new_node;
+			} else {
+				head = head -> next[*word - ASCII_OFFSET];
+			}
+			
+			head -> count += 1;
+			word++;
+		}
+		head -> ends_word = true;
 	}
-	head -> ends_word = true;
-
-	return 1;
+	return ret;
 }
 
 /*
@@ -154,16 +142,45 @@ int check_trie(struct node* head, char* word) {
 	return in_trie && head -> ends_word; // The final node must end the word too
 }
 
+/**
+ * clear_individual
+ * 
+ * A helper function for clear_trie. Recursively calls itself to clear all
+ * nodes, then frees itself.
+ * 
+ * node: The node to clear all children then free itself.
+ * 
+ * returns: none
+ */
+void clear_individual(struct node* curr_node) {
+	struct node* curr_child;
+	for (int i = 0; i < DICT_SIZE; i++) {
+		curr_child = curr_node -> next[i];
+		if (curr_child != NULL) {
+			clear_individual(curr_child);
+		}
+	}
+	free(curr_node);
+}
+
 /*
  * clear_trie
  * 
- * Deletes all entries in the trie.
+ * Deletes all entries in the trie. Does not delete the head node.
  * 
  * head: The head of the trie to clear.
  * 
  * returns: 0 upon success, -1 upon error.
  */
 int clear_trie(struct node* head) {
+	for (int i = 0; i < DICT_SIZE; i++) {
+		if (head -> next[i] != NULL) {
+			clear_individual(head -> next[i]);
+		}
+		head -> next[i] = NULL;
+	}
+	head -> count = 0;
+	head -> ends_word = false;
 	return 0;
 }
 
@@ -175,7 +192,7 @@ int clear_trie(struct node* head) {
  * returns: A pointer to the head of an empty trie, or NULL upon error.
  */
 struct node* create_trie() {
-	return (struct node*)calloc(sizeof(struct node), 1);
+	return (struct node*)calloc(1, sizeof(struct node));
 }
 
 /*
@@ -190,5 +207,32 @@ struct node* create_trie() {
  * 				the trie, and -1 upon error.
  */
 int delete_from_trie(struct node* head, char* word) {
-	return 0;
+	struct node* curr_node = head;
+	int ret = 1;
+	struct node* next_node;
+	char* curr_letter = word;
+	if (!check_trie(head, word)) {
+		ret = 0;
+	} else {
+		if (*curr_letter != '\0') {
+			next_node = curr_node -> next[*curr_letter - ASCII_OFFSET];
+			if (next_node -> count == 1) {
+				curr_node -> next[*curr_letter - ASCII_OFFSET] = NULL;
+			}
+		}
+		while (*curr_letter != '\0') {
+			curr_node = next_node;
+			curr_node -> count -= 1;
+			if (*(curr_letter + 1) != '\0') {
+				next_node = curr_node -> next[*(curr_letter + 1) - ASCII_OFFSET];
+			} else {
+				curr_node -> ends_word = false;
+			}
+			if (curr_node -> count == 0) {
+				free(curr_node);
+			}
+			curr_letter++;
+		}
+	}
+	return ret;
 }

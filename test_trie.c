@@ -33,6 +33,7 @@ SOFTWARE.
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "test.h"
 #include "trie.h"
 
@@ -44,9 +45,12 @@ SOFTWARE.
  * returns: 0 upon success, 1 upon failure.
  */
 int test_add_error_check() {
+	int test;
 	Trie* trie = create_trie();
-	return assert_true(add_to_trie(trie, "abcdefghijklmnopqrstuvwxyz") == 1, 
+	test = assert_true(add_to_trie(trie, "abcdefghijklmnopqrstuvwxyz") == 1, 
 						"Trie adding did not throw an error for one entry");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -57,9 +61,12 @@ int test_add_error_check() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_add_check_validity1() {
+	int test;
 	Trie* trie = create_trie();
-	return assert_true(add_to_trie(trie, "ABCDEFGHIJKLMNOPQRSTUVWXYZ") == -2,
+	test = assert_true(add_to_trie(trie, "ABCDEFGHIJKLMNOPQRSTUVWXYZ") == -2,
 						"Trie does not accept capitalized input");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -70,9 +77,48 @@ int test_add_check_validity1() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_add_check_validity2() {
+	int test;
 	Trie* trie = create_trie();
-	return assert_true(add_to_trie(trie, ".,!<>/\\`~\"\'") == -2,
+	test = assert_true(add_to_trie(trie, ".,!<>/\\`~\"\'") == -2,
 						"Trie does not accept punctuation");
+	free_mem(trie);
+	return test;
+}
+
+/*
+ * test_add_repeat()
+ * 
+ * Verifies that add_to_trie() handles repeat words successfully.
+ * 
+ * returns: 0 upon success, 1 upon failure. 
+ */
+int test_add_repeat() {
+	Trie* trie = create_trie();	
+	int test;
+	add_to_trie(trie, "apples");
+	test = assert_true(add_to_trie(trie, "apples") == 0, 
+						"Trie does not accept repeat words");
+	free_mem(trie);
+	return test;
+}
+
+/*
+ * test_add_substring
+ * 
+ * Verifies that add does not throw errors when adding substring.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_add_substring() {
+	Trie* trie = create_trie();
+	int ret;
+	int test;
+	add_to_trie(trie, "apples");
+	ret = add_to_trie(trie, "apple");
+	test = assert_true(ret == 1 && check_trie(trie, "apple") == 1,
+						"Substring added to trie successfully");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -83,12 +129,15 @@ int test_add_check_validity2() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_check_empty_trie() {
+	int test;
 	Trie* trie = create_trie();
 	int count = 0;
 	count += check_trie(trie, "oobleck");
 	count += check_trie(trie, "bananas");
 	count += check_trie(trie, "apples");
-	return assert_true(count == 0, "No words in empty trie");
+	test = assert_true(count == 0, "No words in empty trie");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -99,10 +148,13 @@ int test_check_empty_trie() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_check_invalid_word() {
+	int test;
 	Trie* trie = create_trie();
 	add_to_trie(trie, "bananas");
-	return assert_true(check_trie(trie, "BaNaNaS") == 0,
+	test = assert_true(check_trie(trie, "BaNaNaS") == 0,
 						"An invalid word is not in the trie");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -113,10 +165,13 @@ int test_check_invalid_word() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_check_nonexistent_word() {
+	int test;
 	Trie* trie = create_trie();
 	add_to_trie(trie, "bananas");
-	return assert_true(check_trie(trie, "apples") == 0, 
+	test = assert_true(check_trie(trie, "apples") == 0, 
 						"\"apples\" not in trie");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -127,9 +182,87 @@ int test_check_nonexistent_word() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_check_single_word() {
+	int test;
 	Trie* trie = create_trie();
 	add_to_trie(trie, "apples");
-	return assert_true(check_trie(trie, "apples"), "\"apples\" in trie");
+	test = assert_true(check_trie(trie, "apples"), "\"apples\" in trie");
+	free_mem(trie);
+	return test;
+}
+
+/*
+ * test_check_substring
+ * 
+ * Verifies that check works properly with substrings.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_check_substring() {
+	Trie* trie = create_trie();
+	int test;
+	add_to_trie(trie, "apples");
+	test = assert_true(check_trie(trie, "apple") == 0, "\"apple\" not in trie");
+	free_mem(trie);
+	return test;
+}
+
+/**
+ * test_clear_empty_trie
+ * 
+ * Verifies that clearing an empty trie doesn't return an error.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_clear_empty_trie() {
+	int test;
+	Trie* trie = create_trie();
+	test = assert_true(clear_trie(trie) == 0, "Empty trie cleared");
+	free_mem(trie);
+	return test;
+}
+
+
+/**
+ * test_clear_multiple
+ * 
+ * Verifies that clearing a trie with one word works.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_clear_multiple() {
+	int test;
+	Trie* trie = create_trie();
+	int count = 0;
+	add_to_trie(trie, "apples");
+	add_to_trie(trie, "bananas");
+	add_to_trie(trie, "banana");
+	add_to_trie(trie, "oobleck");
+	clear_trie(trie);
+	count += check_trie(trie, "apples");
+	count += check_trie(trie, "bananas");
+	count += check_trie(trie, "banana");
+	count += check_trie(trie, "oobleck");
+	test = assert_true(count == 0, "Multi-word trie cleared");
+	free_mem(trie);
+	return test;
+}
+
+/**
+ * test_clear_single
+ * 
+ * Verifies that clearing a trie with one word works.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_clear_single() {
+	int test;
+	Trie* trie = create_trie();
+	add_to_trie(trie, "apples");
+	clear_trie(trie);
+	test = assert_true(check_trie(trie, "apples") == 0, 
+						"Single-word trie cleared");
+	free_mem(trie);
+	return test;
 }
 
 /*
@@ -140,8 +273,77 @@ int test_check_single_word() {
  * returns: 0 upon success, 1 upon failure.
  */
 int test_create() {
-	bool cond = create_trie() > 0;
+	struct node* trie = create_trie();
+	bool cond = trie > 0;
+	free_mem(trie);
 	return assert_true(cond, "Trie pointer > 0");
+}
+
+/*
+ * test_delete_invalid_ret
+ * 
+ * Verifies that delete_from_trie() returns correctly for a word not in the trie.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_delete_invalid() {
+	struct node* trie = create_trie();
+	bool cond;
+	cond = delete_from_trie(trie, "apples") == 0;
+	free_mem(trie);
+	return assert_true(cond, "Deleting from trie handled for word not in trie");
+}
+
+/*
+ * test_delete_substring
+ * 
+ * Verifies that delete_from_trie() does remove the superstring.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_delete_substring() {
+	struct node* trie = create_trie();
+	bool cond;
+	add_to_trie(trie, "apples");
+	add_to_trie(trie, "apple");
+	delete_from_trie(trie, "apple");
+	cond = check_trie(trie, "apples") == 1 && check_trie(trie, "apple") == 0;
+	free_mem(trie);
+	return assert_true(cond, "Only substring deleted from trie");
+}
+
+/*
+ * test_delete_valid
+ * 
+ * Verifies that delete_from_trie() removes a word from the trie from the trie.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_delete_valid() {
+	struct node* trie = create_trie();
+	bool cond;
+	add_to_trie(trie, "apples");
+	delete_from_trie(trie, "apples");
+	cond = check_trie(trie, "apples") == 0;
+	free_mem(trie);
+	return assert_true(cond, "Word in trie deleted from trie");
+}
+
+/*
+ * test_delete_valid_ret
+ * 
+ * Verifies that delete_from_trie() returns correctly when removing a word from
+ * the trie that is already in the trie.
+ * 
+ * returns: 0 upon success, 1 upon failure
+ */
+int test_delete_valid_ret() {
+	struct node* trie = create_trie();
+	bool cond;
+	add_to_trie(trie, "apples");
+	cond = delete_from_trie(trie, "apples") == 1;
+	free_mem(trie);
+	return assert_true(cond, "Word in trie deleted from trie returned good");
 }
 
 /* ============================= TEST FRAMEWORK ============================= */
@@ -181,6 +383,16 @@ int assert_true(bool condition, char* name) {
 }
 
 /*
+ * free_mem
+ * 
+ * Frees the memory associated with a trie used in testing.
+ */
+void free_mem(Trie* head) {
+	clear_trie(head);
+	free(head);
+}
+
+/*
  * run_test
  * 
  * Runs a test, incrementing the total test counter.
@@ -208,7 +420,12 @@ int main() {
 	int (*tests[])() = {&test_create, &test_add_error_check, 
 						&test_add_check_validity1, &test_add_check_validity2, 
 						&test_check_single_word, &test_check_nonexistent_word, 
-						&test_check_empty_trie, &test_check_invalid_word, NULL};
+						&test_check_empty_trie, &test_check_invalid_word,
+						&test_clear_empty_trie, &test_clear_single,
+						&test_clear_multiple, &test_delete_valid,
+						&test_delete_valid_ret, &test_delete_invalid,
+						&test_delete_substring, &test_add_repeat, 
+						&test_check_substring, &test_add_substring, NULL};
 
 	for (int i = 0; tests[i] != NULL; i++) {
 		count += run_test(tests[i], &total_tests);

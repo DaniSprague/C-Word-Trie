@@ -39,19 +39,6 @@ SOFTWARE.
 typedef struct node Trie;
 
 /*
- * add_multiple_to_trie
- * 
- * Adds multiple words to the trie.
- * 
- * trie: The trie to add the words to.
- * words: An array of lowercase words consisting only of [a-z] to add.
- * n: The number of words to add.
- * 
- * returns: The number of words added, or -1 upon error.
- */
-int add_multiple_to_trie(Trie* trie, char** words, int n);
-
-/*
  * add_to_trie
  * 
  * Adds a word to the trie.
@@ -81,7 +68,7 @@ int check_trie(Trie* trie, char* word);
 /*
  * clear_trie
  * 
- * Deletes all entries in the trie.
+ * Deletes all entries in the trie. Does not delete the head node.
  * 
  * trie: The trie to clear.
  * 

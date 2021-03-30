@@ -31,6 +31,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "trie.h"
+
 /*
  * assert_false
  * 
@@ -54,6 +56,13 @@ int assert_false(bool condition, char* name);
  * returns: 0 upon success, 1 upon failure.
  */ 
 int assert_true(bool condition, char* name);
+
+/*
+ * free_mem
+ * 
+ * Frees the memory associated with a trie used in testing.
+ */
+void free_mem(Trie* head);
 
 /*
  * run_test
