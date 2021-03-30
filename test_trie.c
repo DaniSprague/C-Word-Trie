@@ -171,6 +171,22 @@ int test_check_single_word() {
 	return test;
 }
 
+/*
+ * test_check_substring
+ * 
+ * Verifies that check works properly with substrings.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_check_substring() {
+	Trie* trie = create_trie();
+	int test;
+	add_to_trie(trie, "apples");
+	test = assert_true(check_trie(trie, "apple") == 0, "\"apple\" not in trie");
+	free_mem(trie);
+	return test;
+}
+
 /**
  * test_clear_empty_trie
  * 
@@ -389,7 +405,8 @@ int main() {
 						&test_clear_empty_trie, &test_clear_single,
 						&test_clear_multiple, &test_delete_valid,
 						&test_delete_valid_ret, &test_delete_invalid,
-						&test_delete_substring, &test_add_repeat, NULL};
+						&test_delete_substring, &test_add_repeat, 
+						&test_check_substring, NULL};
 
 	for (int i = 0; tests[i] != NULL; i++) {
 		count += run_test(tests[i], &total_tests);
