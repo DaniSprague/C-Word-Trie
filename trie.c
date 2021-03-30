@@ -206,10 +206,12 @@ struct node* create_trie() {
  */
 int delete_from_trie(struct node* head, char* word) {
 	struct node* curr_node = head;
+	int ret = 1;
 	struct node* next_node;
 	char* curr_letter = word;
 	if (*curr_letter != '\0') {
 		next_node = curr_node -> next[*curr_letter - ASCII_OFFSET];
+		curr_node -> next[*curr_letter - ASCII_OFFSET] = NULL;
 	}
 	while (*curr_letter != '\0') {
 		curr_node = next_node;
@@ -224,5 +226,5 @@ int delete_from_trie(struct node* head, char* word) {
 		}
 		curr_letter++;
 	}
-	return 0;
+	return ret;
 }

@@ -230,7 +230,7 @@ int test_create() {
 /*
  * test_delete_valid
  * 
- * Verifies that create_trie() removes a word from the trie that is in the trie.
+ * Verifies that delete_from_trie() removes a word from the trie from the trie.
  * 
  * returns: 0 upon success, 1 upon failure.
  */
@@ -240,7 +240,25 @@ int test_delete_valid() {
 	add_to_trie(trie, "apples");
 	delete_from_trie(trie, "apples");
 	cond = check_trie(trie, "apples") == 0;
+	free_mem(trie);
 	return assert_true(cond, "Word in trie deleted from trie");
+}
+
+/*
+ * test_delete_valid_ret
+ * 
+ * Verifies that delete_from_trie() returns correctly when removing a word from
+ * the trie that is already in the trie.
+ * 
+ * returns: 0 upon success, 1 upon failure
+ */
+int test_delete_valid_ret() {
+	struct node* trie = create_trie();
+	bool cond;
+	add_to_trie(trie, "apples");
+	cond = delete_from_trie(trie, "apples") == 1;
+	free_mem(trie);
+	return assert_true(cond, "Word in trie deleted from trie returned good");
 }
 
 /* ============================= TEST FRAMEWORK ============================= */
@@ -319,7 +337,8 @@ int main() {
 						&test_check_single_word, &test_check_nonexistent_word, 
 						&test_check_empty_trie, &test_check_invalid_word,
 						&test_clear_empty_trie, &test_clear_single,
-						&test_clear_multiple, &test_delete_valid, NULL};
+						&test_clear_multiple, &test_delete_valid,
+						&test_delete_valid_ret, NULL};
 
 	for (int i = 0; tests[i] != NULL; i++) {
 		count += run_test(tests[i], &total_tests);
