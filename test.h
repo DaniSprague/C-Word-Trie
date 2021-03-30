@@ -31,6 +31,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifndef TEST_H
+#define TEST_H
+
 #include "trie.h"
 
 /*
@@ -75,3 +78,5 @@ void free_mem(Trie* head);
  * returns: 0 upon success, 1 upon failure.
  */
 int run_test(int (*test)(), int* total_tests);
+
+#endif
