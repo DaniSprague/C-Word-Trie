@@ -103,6 +103,25 @@ int test_add_repeat() {
 }
 
 /*
+ * test_add_substring
+ * 
+ * Verifies that add does not throw errors when adding substring.
+ * 
+ * returns: 0 upon success, 1 upon failure.
+ */
+int test_add_substring() {
+	Trie* trie = create_trie();
+	int ret;
+	int test;
+	add_to_trie(trie, "apples");
+	ret = add_to_trie(trie, "apple");
+	test = assert_true(ret == 1 && check_trie(trie, "apple") == 1,
+						"Substring added to trie successfully");
+	free_mem(trie);
+	return test;
+}
+
+/*
  * test_check_empty_trie
  * 
  * Verifies that check works with an empty trie.
@@ -406,7 +425,7 @@ int main() {
 						&test_clear_multiple, &test_delete_valid,
 						&test_delete_valid_ret, &test_delete_invalid,
 						&test_delete_substring, &test_add_repeat, 
-						&test_check_substring, NULL};
+						&test_check_substring, &test_add_substring, NULL};
 
 	for (int i = 0; tests[i] != NULL; i++) {
 		count += run_test(tests[i], &total_tests);
