@@ -205,5 +205,24 @@ struct node* create_trie() {
  * 				the trie, and -1 upon error.
  */
 int delete_from_trie(struct node* head, char* word) {
+	struct node* curr_node = head;
+	struct node* next_node;
+	char* curr_letter = word;
+	if (*curr_letter != '\0') {
+		next_node = curr_node -> next[*curr_letter - ASCII_OFFSET];
+	}
+	while (*curr_letter != '\0') {
+		curr_node = next_node;
+		curr_node -> count -= 1;
+		if (*(curr_letter + 1) != '\0') {
+			next_node = curr_node -> next[*(curr_letter + 1) - ASCII_OFFSET];
+		} else {
+			curr_node -> ends_word = false;
+		}
+		if (curr_node -> count == 0) {
+			free(curr_node);
+		}
+		curr_letter++;
+	}
 	return 0;
 }
