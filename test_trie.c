@@ -86,6 +86,23 @@ int test_add_check_validity2() {
 }
 
 /*
+ * test_add_repeat()
+ * 
+ * Verifies that add_to_trie() handles repeat words successfully.
+ * 
+ * returns: 0 upon success, 1 upon failure. 
+ */
+int test_add_repeat() {
+	Trie* trie = create_trie();	
+	int test;
+	add_to_trie(trie, "apples");
+	test = assert_true(add_to_trie(trie, "apples") == 0, 
+						"Trie does not accept repeat words");
+	free_mem(trie);
+	return test;
+}
+
+/*
  * test_check_empty_trie
  * 
  * Verifies that check works with an empty trie.
@@ -372,7 +389,7 @@ int main() {
 						&test_clear_empty_trie, &test_clear_single,
 						&test_clear_multiple, &test_delete_valid,
 						&test_delete_valid_ret, &test_delete_invalid,
-						&test_delete_substring, NULL};
+						&test_delete_substring, &test_add_repeat, NULL};
 
 	for (int i = 0; tests[i] != NULL; i++) {
 		count += run_test(tests[i], &total_tests);
