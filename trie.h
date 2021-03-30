@@ -31,6 +31,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifndef TRIE_H
+#define TRIE_H
+
 /*
  * trie 
  * 
@@ -97,3 +100,5 @@ Trie* create_trie();
  * 				the trie, and -1 upon error.
  */
 int delete_from_trie(Trie* trie, char* word);
+
+#endif
