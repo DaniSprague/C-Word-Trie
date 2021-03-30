@@ -8,6 +8,8 @@ https://github.com/DaniSprague/C-Word-Trie
 A trie implementation that stores lowercase words. Supports adding, deleting,
 creating, clearing, and checking membership in a tree.
 
+WARNING: This trie does not have a maximum nodes limit, which could be used
+maliciously to fill up memory.
 
 MIT License
 
@@ -40,7 +42,6 @@ SOFTWARE.
 
 #define ASCII_OFFSET 97 // The offset from 0 our first character is in ASCII
 #define DICT_SIZE 26 // The number of characters in our dict
-#define MAX_NODES 1000000 // Prevents memory overflowing.
 
 /*
  * node 
@@ -71,21 +72,6 @@ bool is_word_valid(char* word) {
 		word++;
 	}
 	return valid;
-}
-
-/*
- * add_multiple_to_trie
- * 
- * Adds multiple words to the trie.
- * 
- * head: The head of the trie to add the words to.
- * words: An array of lowercase words consisting only of [a-z] to add.
- * n: The number of words to add.
- * 
- * returns: The number of words added, or -1 upon error.
- */
-int add_multiple_to_trie(struct node* head, char** words, int n) {
-	return 0;
 }
 
 /*
